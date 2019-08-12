@@ -1,0 +1,52 @@
+Step one:-
+
+sudo apt-get install apt-mirror proftpd-basic
+
+Step Two:-
+
+sudo nano /etc/apt/mirror.list
+
+Step three:-
+$ sudo mkdir -p /opt/apt-mirror
+$ sudo apt-mirror
+
+sudo nano /etc/proftpd/conf.d/anonymous.conf
+===============================
+<Anonymous ~ftp>
+   User                    ftp
+   Group                nogroup
+   UserAlias         anonymous ftp
+   RequireValidShell        off
+#   MaxClients                   10
+   <Directory *>
+     <Limit WRITE>
+       DenyAll
+     </Limit>
+   </Directory>
+ </Anonymous>
+==============================
+
+Step Four:-
+
+sudo mount --bind /opt/apt-mirror/mirror/archive.ubuntu.com/  /srv/ftp/
+
+Step five:-
+mount
+
+sudo update-rc.d proftpd enable
+
+sudo nano /etc/rc.local
+
+Step Six:-
+sleep 5
+sudo mount --bind  /opt/apt-mirror/mirror/archive.ubuntu.com/ /srv/ftp/
+=======================================================
+For Debian:-
+
+$ sudo mkdir /srv/ftp/debian
+$ sudo mount --bind /opt/apt-mirror/mirror/ftp.us.debian.org/debian/ /srv/ftp/debian/
+
+
+sudo crontab –e
+
+0  2  *  *  *  /usr/bin/apt-mirror >> /opt/apt-mirror/mirror/archive.ubuntu.com/ubuntu/apt-mirror.log
